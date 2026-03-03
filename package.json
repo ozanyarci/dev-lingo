@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "deploy": "ng build --base-href /dev-lingo/ && npx -y angular-cli-ghpages --dir dist/dev-lingo/browser",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
