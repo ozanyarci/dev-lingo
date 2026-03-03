@@ -1,0 +1,63 @@
+<div class="lesson-screen">
+    <div class="lesson-header">
+        <button (click)="exitLesson()" class="exit-btn">✕</button>
+        <div class="header-content">
+            <span class="lesson-title">{{ lessonTitle() }}</span>
+            <div class="progress-container">
+                <div class="progress-bar" [style.width.%]="progress"></div>
+            </div>
+        </div>
+        <div class="hearts-display">
+            <span class="heart-icon">❤️</span>
+            <span class="heart-count">{{ game.stats().hearts }}</span>
+        </div>
+    </div>
+
+    <div class="question-container animate-fade-in"
+        *ngIf="questions().length > 0 && questions()[currentQuestionIndex()]">
+        <h2 class="question-text">{{ questions()[currentQuestionIndex()].text }}</h2>
+
+        <div *ngIf="questions()[currentQuestionIndex()].code" class="code-snippet">
+            <code>{{ questions()[currentQuestionIndex()].code }}</code>
+        </div>
+
+        <div class="options-grid">
+            <button *ngFor="let option of questions()[currentQuestionIndex()].options" (click)="selectOption(option)"
+                class="option-card" [class.selected]="selectedOption() === option"
+                [class.correct]="isAnswerChecked() && option === questions()[currentQuestionIndex()].correctAnswer"
+                [class.wrong]="isAnswerChecked() && selectedOption() === option && !isCorrect()"
+                [disabled]="isAnswerChecked()">
+                <span class="option-label">{{ option }}</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="lesson-footer" [class.checked]="isAnswerChecked()"
+        [class.correct-footer]="isAnswerChecked() && isCorrect()"
+        [class.wrong-footer]="isAnswerChecked() && !isCorrect()">
+        <div class="feedback-container" *ngIf="isAnswerChecked()">
+            <div class="feedback-icon">
+                {{ isCorrect() ? '✔️' : '❌' }}
+            </div>
+            <div class="feedback-text">
+                <h3 [style.color]="isCorrect() ? '#58a700' : '#ea2b2b'">
+                    {{ isCorrect() ? 'Amazing!' : 'Correct solution:' }}
+                </h3>
+                <p class="correct-answer" *ngIf="!isCorrect()">
+                    {{ questions()[currentQuestionIndex()].correctAnswer }}
+                </p>
+                <div class="explanation" *ngIf="isAnswerChecked() && questions()[currentQuestionIndex()].explanation">
+                    <strong>Explanation:</strong> {{ questions()[currentQuestionIndex()].explanation }}
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-actions">
+            <button class="btn-primary skip-btn" *ngIf="!isAnswerChecked()">Skip</button>
+            <button class="btn-primary check-btn" [disabled]="!selectedOption()" (click)="checkAnswer()"
+                [style.backgroundColor]="isAnswerChecked() ? (isCorrect() ? '#58cc02' : '#ff4b4b') : ''">
+                {{ isAnswerChecked() ? 'Continue' : 'Check' }}
+            </button>
+        </div>
+    </div>
+</div>

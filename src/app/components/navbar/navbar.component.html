@@ -1,0 +1,71 @@
+<nav class="navbar">
+    <div class="nav-container">
+        <a routerLink="/" class="logo">
+            <div class="logo-circle">
+                <span class="logo-emoji">🦉</span>
+            </div>
+            <span class="logo-text">DevLingo</span>
+        </a>
+
+        <div class="stats-container">
+            <div class="stat-item streak" [class.active]="game.stats().streak > 0">
+                <span class="stat-icon">🔥</span>
+                <span class="stat-value">{{ game.stats().streak }}</span>
+            </div>
+            <div class="stat-item gems">
+                <span class="stat-icon">💎</span>
+                <span class="stat-value">{{ game.stats().gems }}</span>
+            </div>
+            <div class="stat-item hearts" [class.clickable]="game.stats().hearts === 0"
+                [class.low]="game.stats().hearts === 0" (click)="handleHeartRefill()"
+                [title]="game.stats().hearts === 0 ? 'Click to refill hearts for 100 diamonds!' : (formattedHeartTimer() ? 'Next heart in ' + formattedHeartTimer() : 'Full hearts')">
+                <span class="stat-icon">❤️</span>
+                <span class="stat-value">{{ game.stats().hearts }}</span>
+                <span *ngIf="formattedHeartTimer()" class="timer">{{ formattedHeartTimer() }}</span>
+            </div>
+        </div>
+
+        <div class="nav-progress" [title]="game.stats().xp + ' / ' + game.pointsToNextLevel() + ' XP'">
+            <div class="level-badge">Lvl {{ game.stats().level }}</div>
+            <div class="progress-track">
+                <div class="progress-fill" [style.width.%]="game.progressToNextLevel()"></div>
+            </div>
+        </div>
+
+        <div class="user-actions">
+            <button class="theme-toggle" (click)="theme.toggleTheme()"
+                [title]="theme.isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+                {{ theme.isDarkMode() ? '☀️' : '🌙' }}
+            </button>
+        </div>
+    </div>
+
+    <!-- Heart Refill Modal -->
+    <div class="modal-overlay" *ngIf="showRefillModal()" (click)="showRefillModal.set(false)">
+        <div class="modal-content animate-fade-in" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <button class="close-btn" (click)="showRefillModal.set(false)">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="heart-illustration">❤️</div>
+                <h2>Refill Hearts</h2>
+                <p>Don't let the learning stop! Refill all your hearts to keep going.</p>
+
+                <div class="cost-badge">
+                    <span class="cost-value">100</span>
+                    <span class="cost-icon">💎</span>
+                </div>
+
+                <div class="timer-info" *ngIf="formattedHeartTimer()">
+                    Next free heart in <span>{{ formattedHeartTimer() }}</span>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn-secondary" (click)="showRefillModal.set(false)">Maybe Later</button>
+                    <button class="btn-primary" [disabled]="game.stats().gems < 100" (click)="confirmRefill()">
+                        {{ game.stats().gems < 100 ? 'Not enough gems' : 'Refill Now' }} </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,223 @@
+.lesson-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-color);
+}
+
+.lesson-header {
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.exit-btn {
+    background: none;
+    font-size: 24px;
+    color: var(--text-muted);
+    padding: 8px;
+}
+
+.header-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.lesson-title {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.progress-container {
+    height: 16px;
+    background-color: var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #58cc02;
+    transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hearts-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    color: #ff4b4b;
+}
+
+.question-container {
+    flex: 1;
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 0 24px;
+    width: 100%;
+}
+
+.question-text {
+    font-size: 28px;
+    margin-bottom: 32px;
+}
+
+.code-snippet {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 20px;
+    border-radius: 12px;
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: 32px;
+    font-size: 18px;
+    border: 1px solid #333;
+}
+
+.options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option-card {
+    text-align: left;
+    padding: 16px 24px;
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-color);
+    transition: all 0.2s;
+    text-transform: none;
+    font-size: 18px;
+    color: var(--text-main);
+    box-shadow: 0 4px 0 var(--border-color);
+}
+
+.option-card:hover:not(:disabled) {
+    background-color: var(--surface-color);
+}
+
+.option-card.selected {
+    background-color: rgba(28, 176, 246, 0.1);
+    border-color: #1cb0f6;
+    box-shadow: 0 4px 0 #1cb0f6;
+    color: #1cb0f6;
+}
+
+.option-card.correct {
+    background-color: rgba(88, 204, 2, 0.1);
+    border-color: #58cc02;
+    box-shadow: 0 4px 0 #58cc02;
+    color: #58cc02;
+}
+
+.option-card.wrong {
+    background-color: rgba(255, 75, 75, 0.1);
+    border-color: #ff4b4b;
+    box-shadow: 0 4px 0 #ff4b4b;
+    color: #ff4b4b;
+}
+
+.lesson-footer {
+    padding: 30px 40px;
+    border-top: 2px solid var(--border-color);
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.correct-footer {
+    background-color: #d7ffb8;
+    border-top-color: transparent;
+}
+
+.wrong-footer {
+    background-color: #ffdfe0;
+    border-top-color: transparent;
+}
+
+.footer-actions {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.check-btn {
+    min-width: 150px;
+    padding: 16px 32px;
+    font-size: 18px;
+}
+
+.feedback-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.feedback-icon {
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+}
+
+.feedback-text h3 {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.correct-footer .feedback-text h3 {
+    color: #58a700;
+}
+
+.wrong-footer .feedback-text h3 {
+    color: #ea2b2b;
+}
+
+.correct-answer {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #ea2b2b;
+}
+
+.explanation {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-main);
+    max-width: 600px;
+}
+
+.explanation strong {
+    color: inherit;
+    opacity: 0.8;
+}
+
+@media (max-width: 600px) {
+    .lesson-header {
+        padding: 10px 20px;
+    }
+
+    .lesson-footer {
+        padding: 20px;
+    }
+}
