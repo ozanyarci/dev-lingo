@@ -49,7 +49,15 @@ export class LearnComponent implements AfterViewInit {
         { id: 3, title: 'Control flow and error handling', description: 'Conditionals and Exceptions', color: '#ffc800', lessons: 5 },
         { id: 4, title: 'Loops and iteration', description: 'Repeating blocks of code', color: '#ff4b4b', lessons: 5 },
         { id: 5, title: 'Functions', description: 'Reusable code blocks', color: '#a855f7', lessons: 5 },
-        { id: 6, title: 'Expressions and operators', description: 'Calculations and Logic', color: '#ec4899', lessons: 7 }
+        { id: 6, title: 'Expressions and operators', description: 'Calculations and Logic', color: '#ec4899', lessons: 7 },
+        { id: 7, title: 'Numbers and strings', description: 'Working with numeric and text data', color: '#00cd9c', lessons: 5 },
+        { id: 8, title: 'Representing dates & times', description: 'Working with the Date object', color: '#6366f1', lessons: 3 },
+        { id: 9, title: 'Regular expressions', description: 'Pattern matching and search', color: '#f59e0b', lessons: 5 },
+        { id: 10, title: 'Indexed collections', description: 'Working with arrays', color: '#3b82f6', lessons: 7 },
+        { id: 11, title: 'Keyed collections', description: 'Working with Maps and Sets', color: '#8b5cf6', lessons: 3 },
+        { id: 12, title: 'Working with objects', description: 'Deep dive into objects', color: '#14b8a6', lessons: 7 },
+        { id: 13, title: 'Using classes', description: 'Object-oriented setup', color: '#f43f5e', lessons: 9 },
+        { id: 14, title: 'Using promises', description: 'Handling asynchronous operations', color: '#6366f1', lessons: 7 }
     ];
 
     ngAfterViewInit() {
