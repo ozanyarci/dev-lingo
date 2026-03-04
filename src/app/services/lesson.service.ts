@@ -32,7 +32,7 @@ export class LessonService {
 
     private async loadLessons() {
         try {
-            const response = await firstValueFrom(this.http.get<{ data: string }>('assets/data/lessons.json'));
+            const response = await firstValueFrom(this.http.get<{ data: string }>(`assets/data/lessons.json?v=${new Date().getTime()}`));
             if (response && response.data) {
                 // Decode Base64 to bytes, then bytes to string (UTF-8)
                 const binaryString = atob(response.data);
