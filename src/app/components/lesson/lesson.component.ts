@@ -23,6 +23,11 @@ export class LessonComponent implements OnInit {
     isCorrect = signal<boolean>(false);
     questions = signal<Question[]>([]);
     lessonTitle = signal<string>('');
+    isSummaryShown = signal<boolean>(false);
+    timeSpent = signal<string>('');
+    totalCompletionPercentage = signal<number>(0);
+    xpEarned = signal<number>(0);
+    private startTime: number = 0;
     outOfHearts = computed(() => this.game.stats().hearts === 0);
 
     formattedHeartTimer = computed(() => {
@@ -52,6 +57,7 @@ export class LessonComponent implements OnInit {
     ngOnInit() {
         const id = Number(this.route.snapshot.paramMap.get('id'));
         this.lessonId.set(id);
+        this.startTime = Date.now();
     }
 
     selectOption(option: string) {
@@ -73,6 +79,7 @@ export class LessonComponent implements OnInit {
 
         if (correct) {
             this.game.addXp(20);
+            this.xpEarned.update(xp => xp + 20);
         } else {
             this.game.useHeart();
         }
@@ -85,14 +92,26 @@ export class LessonComponent implements OnInit {
             this.isAnswerChecked.set(false);
         } else {
             // Lesson complete
+            const endTime = Date.now();
+            const diff = endTime - this.startTime;
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            this.timeSpent.set(`${minutes}:${seconds.toString().padStart(2, '0')}`);
+
             this.game.addGems(50);
             this.game.completeLesson(this.lessonId());
-            this.router.navigate(['/learn']);
+
+            // Calculate total progress
+            const totalLessons = this.lessonService.getAllLessons().length;
+            const completedCount = this.game.stats().completedLessons.length;
+            this.totalCompletionPercentage.set(Math.round((completedCount / totalLessons) * 100));
+
+            this.isSummaryShown.set(true);
         }
     }
 
     exitLesson() {
-        if (confirm('Are you sure you want to quit? You will lose your progress.')) {
+        if (this.isSummaryShown() || confirm('Are you sure you want to quit? You will lose your progress.')) {
             this.router.navigate(['/learn']);
         }
     }

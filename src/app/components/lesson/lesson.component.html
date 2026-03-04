@@ -1,4 +1,4 @@
-<div class="lesson-screen">
+<div class="lesson-screen" *ngIf="!isSummaryShown()">
     <div class="lesson-header">
         <button (click)="exitLesson()" class="exit-btn">✕</button>
         <div class="header-content">
@@ -56,6 +56,48 @@
             <button class="btn-primary check-btn" [disabled]="!selectedOption()" (click)="checkAnswer()"
                 [style.backgroundColor]="isAnswerChecked() ? (isCorrect() ? '#58cc02' : '#ff4b4b') : ''">
                 {{ isAnswerChecked() ? 'Continue' : 'Check' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="summary-screen animate-fade-in" *ngIf="isSummaryShown()">
+    <div class="summary-content">
+        <div class="congrats-icon">🎉</div>
+        <h1 class="summary-title">Lesson Complete!</h1>
+        <p class="summary-subtitle">You're doing great!</p>
+
+        <div class="stats-grid">
+            <div class="stat-card time-stat">
+                <span class="stat-label">TIME SPENT</span>
+                <span class="stat-value">{{ timeSpent() }}</span>
+            </div>
+            <div class="stat-card progress-stat">
+                <span class="stat-label">TOTAL PROGRESS</span>
+                <div class="circular-progress-container" [style.--progress]="totalCompletionPercentage() + '%'">
+                    <div class="circular-progress">
+                        <span class="progress-text">{{ totalCompletionPercentage() }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rewards-row">
+            <div class="xp-gain animate-pop-in">
+                <span class="xp-icon">✨</span>
+                <span class="xp-text">+{{ xpEarned() }} XP</span>
+            </div>
+            <div class="gems-gain animate-pop-in">
+                <span class="gem-icon">💎</span>
+                <span class="gem-text">+50 Gems</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="lesson-footer">
+        <div class="footer-actions">
+            <button class="btn-primary continue-btn" (click)="exitLesson()">
+                CONTINUE TO LEARN
             </button>
         </div>
     </div>
