@@ -2,6 +2,7 @@ import { Injectable, signal, computed, effect } from '@angular/core';
 
 export interface UserStats {
     streak: number;
+    lastLessonDate: string | null;
     gems: number;
     hearts: number;
     lastHeartUpdate: number;
@@ -34,25 +35,37 @@ export class GameService {
             localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.stats()));
         });
 
-        // Periodic check for heart refill
-        this.checkHearts();
-        setInterval(() => this.checkHearts(), 1000); // Check every second for timer updates
+        // Periodic check for hearts and streak
+        this.checkStatus();
+        setInterval(() => this.checkStatus(), 1000);
     }
 
     private loadStats(): UserStats {
         const saved = localStorage.getItem(this.STORAGE_KEY);
+        let stats: UserStats;
+
         if (saved) {
             try {
-                const parsed = JSON.parse(saved);
+                stats = JSON.parse(saved);
                 // Ensure lastHeartUpdate exists for legacy data
-                if (!parsed.lastHeartUpdate) parsed.lastHeartUpdate = Date.now();
-                return parsed;
+                if (!stats.lastHeartUpdate) stats.lastHeartUpdate = Date.now();
+                if (stats.lastLessonDate === undefined) stats.lastLessonDate = null;
             } catch (e) {
                 console.error('Failed to load stats', e);
+                stats = this.getDefaultStats();
             }
+        } else {
+            stats = this.getDefaultStats();
         }
+
+        // Check for streak reset
+        return this.checkStreakReset(stats);
+    }
+
+    private getDefaultStats(): UserStats {
         return {
             streak: 0,
+            lastLessonDate: null,
             gems: 500,
             hearts: 5,
             lastHeartUpdate: Date.now(),
@@ -62,10 +75,30 @@ export class GameService {
         };
     }
 
-    private checkHearts() {
+    private checkStreakReset(stats: UserStats): UserStats {
+        if (!stats.lastLessonDate) return stats;
+
+        const today = new Date().toISOString().split('T')[0];
+        const lastDate = stats.lastLessonDate;
+
+        if (today === lastDate) return stats;
+
+        const last = new Date(lastDate);
+        const now = new Date(today);
+        const diffDays = Math.floor((now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
+
+        if (diffDays > 1) {
+            return { ...stats, streak: 0 };
+        }
+
+        return stats;
+    }
+
+    private checkStatus() {
         const now = Date.now();
         const s = this.stats();
 
+        // 1. Heart Refill
         if (s.hearts < this.MAX_HEARTS) {
             const timePassed = now - s.lastHeartUpdate;
             const heartsToGain = Math.floor(timePassed / this.REFILL_TIME);
@@ -84,6 +117,18 @@ export class GameService {
             this.nextHeartIn.set(remaining);
         } else {
             this.nextHeartIn.set(0);
+        }
+
+        // 2. Streak Reset (Midnight transition)
+        const today = new Date().toISOString().split('T')[0];
+        if (s.lastLessonDate && s.lastLessonDate !== today) {
+            const last = new Date(s.lastLessonDate);
+            const current = new Date(today);
+            const diffDays = Math.floor((current.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
+
+            if (diffDays > 1 && s.streak > 0) {
+                this._stats.update(curr => ({ ...curr, streak: 0 }));
+            }
         }
     }
 
@@ -129,8 +174,32 @@ export class GameService {
 
     completeLesson(lessonId: number) {
         this._stats.update(s => {
-            if (s.completedLessons.includes(lessonId)) return s;
-            return { ...s, completedLessons: [...s.completedLessons, lessonId] };
+            const today = new Date().toISOString().split('T')[0];
+            let newStreak = s.streak;
+
+            if (s.lastLessonDate === null) {
+                newStreak = 1;
+            } else if (s.lastLessonDate !== today) {
+                const last = new Date(s.lastLessonDate);
+                const now = new Date(today);
+                const diffDays = Math.floor((now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
+
+                if (diffDays === 1) {
+                    newStreak = s.streak + 1;
+                } else {
+                    newStreak = 1;
+                }
+            }
+
+            const alreadyCompleted = s.completedLessons.includes(lessonId);
+            const newCompleted = alreadyCompleted ? s.completedLessons : [...s.completedLessons, lessonId];
+
+            return {
+                ...s,
+                streak: newStreak,
+                lastLessonDate: today,
+                completedLessons: newCompleted
+            };
         });
     }
 

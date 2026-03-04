@@ -40,7 +40,7 @@
                 {{ isCorrect() ? '✔️' : '❌' }}
             </div>
             <div class="feedback-text">
-                <h3 [style.color]="isCorrect() ? '#58a700' : '#ea2b2b'">
+                <h3>
                     {{ isCorrect() ? 'Amazing!' : 'Correct solution:' }}
                 </h3>
                 <p class="correct-answer" *ngIf="!isCorrect()">
@@ -53,7 +53,6 @@
         </div>
 
         <div class="footer-actions">
-            <button class="btn-primary skip-btn" *ngIf="!isAnswerChecked()">Skip</button>
             <button class="btn-primary check-btn" [disabled]="!selectedOption()" (click)="checkAnswer()"
                 [style.backgroundColor]="isAnswerChecked() ? (isCorrect() ? '#58cc02' : '#ff4b4b') : ''">
                 {{ isAnswerChecked() ? 'Continue' : 'Check' }}

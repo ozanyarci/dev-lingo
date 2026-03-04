@@ -48,7 +48,7 @@ export class LearnComponent {
         { id: 2, title: 'Grammar and Types', description: 'Declarations and Scoping', color: '#1cb0f6', lessons: 5 },
         { id: 3, title: 'Control flow and error handling', description: 'Conditionals and Exceptions', color: '#ffc800', lessons: 5 },
         { id: 4, title: 'Loops and iteration', description: 'Repeating blocks of code', color: '#ff4b4b', lessons: 5 },
-        { id: 5, title: 'Functions', description: 'Reusable code blocks', color: '#a855f7', lessons: 6 }
+        { id: 5, title: 'Functions', description: 'Reusable code blocks', color: '#a855f7', lessons: 5 }
     ];
 
     getLessonsArray(count: number) {

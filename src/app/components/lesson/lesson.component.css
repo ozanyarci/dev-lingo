@@ -130,6 +130,7 @@
     padding: 30px 40px;
     border-top: 2px solid var(--border-color);
     background-color: var(--bg-color);
+    transition: background-color 0.3s ease;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -138,11 +139,15 @@
 .correct-footer {
     background-color: #d7ffb8;
     border-top-color: transparent;
+    --feedback-text-color: #58a700;
+    --explanation-text-color: #4b4b4b;
 }
 
 .wrong-footer {
     background-color: #ffdfe0;
     border-top-color: transparent;
+    --feedback-text-color: #ea2b2b;
+    --explanation-text-color: #4b4b4b;
 }
 
 .footer-actions {
@@ -150,7 +155,7 @@
     margin: 0 auto;
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
@@ -165,8 +170,10 @@
     margin: 0 auto;
     width: 100%;
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 20px;
+    padding: 0 20px;
 }
 
 .feedback-icon {
@@ -183,6 +190,8 @@
 .feedback-text h3 {
     font-size: 24px;
     margin-bottom: 4px;
+    color: #4b4b4b;
+    /* Default */
 }
 
 .correct-footer .feedback-text h3 {
@@ -203,13 +212,44 @@
 .explanation {
     font-size: 14px;
     line-height: 1.5;
-    color: var(--text-main);
+    color: var(--explanation-text-color, var(--text-main));
     max-width: 600px;
 }
 
 .explanation strong {
     color: inherit;
     opacity: 0.8;
+}
+
+/* Dark Mode Adjustments */
+[data-theme='dark'] .correct-footer {
+    background-color: #1d3600;
+    border-top-color: #2d5200;
+    --feedback-text-color: #78e100;
+    --explanation-text-color: #f0f0f0;
+}
+
+[data-theme='dark'] .wrong-footer {
+    background-color: #3d1a1a;
+    border-top-color: #5c2626;
+    --feedback-text-color: #ff6666;
+    --explanation-text-color: #f0f0f0;
+}
+
+[data-theme='dark'] .feedback-icon {
+    background-color: #1a1a24;
+}
+
+[data-theme='dark'] .correct-footer .feedback-text h3 {
+    color: var(--feedback-text-color) !important;
+}
+
+[data-theme='dark'] .wrong-footer .feedback-text h3 {
+    color: var(--feedback-text-color) !important;
+}
+
+[data-theme='dark'] .correct-answer {
+    color: var(--feedback-text-color) !important;
 }
 
 @media (max-width: 600px) {
