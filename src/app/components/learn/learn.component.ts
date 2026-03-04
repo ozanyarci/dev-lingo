@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal } from '@angular/core';
+import { Component, inject, computed, signal, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { GameService } from '../../services/game.service';
@@ -24,7 +24,7 @@ interface GuidebookContent {
     templateUrl: './learn.component.html',
     styleUrl: './learn.component.css'
 })
-export class LearnComponent {
+export class LearnComponent implements AfterViewInit {
     protected readonly game = inject(GameService);
     private readonly lessonService = inject(LessonService);
 
@@ -50,6 +50,23 @@ export class LearnComponent {
         { id: 4, title: 'Loops and iteration', description: 'Repeating blocks of code', color: '#ff4b4b', lessons: 5 },
         { id: 5, title: 'Functions', description: 'Reusable code blocks', color: '#a855f7', lessons: 5 }
     ];
+
+    ngAfterViewInit() {
+        // Small timeout to ensure the DOM is ready and styles are applied
+        setTimeout(() => {
+            this.scrollToCurrentLesson();
+        }, 100);
+    }
+
+    private scrollToCurrentLesson() {
+        const currentLesson = document.getElementById('current-lesson');
+        if (currentLesson) {
+            currentLesson.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    }
 
     getLessonsArray(count: number) {
         return Array(count).fill(0);

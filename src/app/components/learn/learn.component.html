@@ -16,6 +16,7 @@
                     [style.--offset]="(j % 2 === 0 ? '20px' : '-20px')">
                     <a [routerLink]="(isLessonAccessible(unit.id, j) && game.stats().hearts > 0) ? ['/lesson', unit.id * 100 + (j + 1)] : null"
                         (click)="handleLessonClick(unit.id, j, $event)" class="lesson-node"
+                        [id]="isCurrentLesson(unit.id, j) ? 'current-lesson' : null"
                         [class.completed]="isLessonCompleted(unit.id, j)" [class.current]="isCurrentLesson(unit.id, j)"
                         [class.locked]="!isLessonAccessible(unit.id, j) || (isCurrentLesson(unit.id, j) && game.stats().hearts === 0)"
                         [style.borderColor]="isLessonCompleted(unit.id, j) ? unit.color : 'var(--border-color)'">
