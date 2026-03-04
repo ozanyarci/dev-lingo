@@ -304,32 +304,61 @@
 
 @media (max-width: 768px) {
     .navbar {
-        height: 110px;
-        padding: 12px;
+        height: auto;
+        min-height: 60px;
+        padding: 8px 16px;
     }
 
     .nav-container {
         flex-wrap: wrap;
-        gap: 12px;
-        justify-content: center;
-    }
-
-    .nav-progress {
-        order: 3;
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
+        gap: 8px;
+        justify-content: space-between;
     }
 
     .logo {
         order: 1;
     }
 
+    .logo-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+    }
+
     .stats-container {
         order: 2;
+        gap: 8px;
+    }
+
+    .stat-item {
+        padding: 4px 8px;
+        font-size: 14px;
+        gap: 4px;
+    }
+
+    .nav-progress {
+        order: 4;
+        width: 100%;
+        max-width: 100%;
+        margin: 4px 0 0 0;
+        gap: 8px;
+    }
+
+    .level-badge {
+        padding: 2px 8px;
+        font-size: 12px;
+    }
+
+    .progress-track {
+        height: 8px;
     }
 
     .user-actions {
-        order: 1;
+        order: 3;
+    }
+
+    .theme-toggle {
+        padding: 4px;
+        font-size: 18px;
     }
 }

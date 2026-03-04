@@ -261,41 +261,71 @@
 
 @media (max-width: 600px) {
     .lesson-header {
-        padding: 10px 20px;
+        padding: 5px 15px;
     }
 
     .lesson-footer {
-        padding: 20px;
-        gap: 15px;
+        padding: 15px;
+        gap: 10px;
     }
 
     .question-container {
-        margin: 10px auto;
-        padding: 0 20px;
+        margin: 5px auto;
+        padding: 0 16px;
     }
 
     .question-text {
-        font-size: 24px;
-        margin-bottom: 24px;
+        font-size: 20px;
+        margin-bottom: 16px;
     }
 
     .code-snippet {
-        padding: 15px;
+        padding: 12px;
+        font-size: 14px;
+        margin-bottom: 16px;
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    .options-grid {
+        gap: 8px;
+    }
+
+    .option-card {
+        padding: 12px 16px;
         font-size: 16px;
-        margin-bottom: 20px;
+        box-shadow: 0 3px 0 var(--border-color);
+    }
+
+    .option-card.selected {
+        box-shadow: 0 3px 0 #1cb0f6;
+    }
+
+    .option-card.correct {
+        box-shadow: 0 3px 0 #58cc02;
+    }
+
+    .option-card.wrong {
+        box-shadow: 0 3px 0 #ff4b4b;
     }
 
     .feedback-icon {
-        width: 48px;
-        height: 48px;
-        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
     }
 
     .feedback-text h3 {
-        font-size: 20px;
+        font-size: 18px;
+    }
+
+    .feedback-container {
+        gap: 12px;
     }
 
     .check-btn {
         width: 100%;
+        padding: 12px;
+        font-size: 16px;
     }
 }
