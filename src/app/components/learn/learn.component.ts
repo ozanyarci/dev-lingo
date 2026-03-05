@@ -60,7 +60,8 @@ export class LearnComponent implements AfterViewInit {
         { id: 14, title: 'Using promises', description: 'Handling asynchronous operations', color: '#6366f1', lessons: 7 },
         { id: 15, title: 'JavaScript typed arrays', description: 'Working with binary data', color: '#eab308', lessons: 5 },
         { id: 16, title: 'Iterators and generators', description: 'Custom iteration and streams', color: '#f43f5e', lessons: 3 },
-        { id: 17, title: 'Resource management', description: 'Managing disposable resources', color: '#0ea5e9', lessons: 5 }
+        { id: 17, title: 'Resource management', description: 'Managing disposable resources', color: '#0ea5e9', lessons: 5 },
+        { id: 18, title: 'Internationalization', description: 'Locale-aware formatting with Intl', color: '#f97316', lessons: 7 }
     ];
 
     ngAfterViewInit() {
