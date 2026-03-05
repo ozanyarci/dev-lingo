@@ -1,7 +1,7 @@
 {
   "configVersion": 1,
-  "timestamp": 1772716226778,
-  "index": "/index.html",
+  "timestamp": 1772719451569,
+  "index": "/dev-lingo/index.html",
   "assetGroups": [
     {
       "name": "app",
@@ -11,11 +11,11 @@
         "ignoreVary": true
       },
       "urls": [
-        "/favicon.ico",
-        "/index.html",
-        "/main-SAF4WGGK.js",
-        "/manifest.webmanifest",
-        "/styles-FDERAL6D.css"
+        "/dev-lingo/favicon.ico",
+        "/dev-lingo/index.html",
+        "/dev-lingo/main-SAF4WGGK.js",
+        "/dev-lingo/manifest.webmanifest",
+        "/dev-lingo/styles-FDERAL6D.css"
       ],
       "patterns": []
     },
@@ -27,37 +27,37 @@
         "ignoreVary": true
       },
       "urls": [
-        "/icons/icon-128x128.png",
-        "/icons/icon-144x144.png",
-        "/icons/icon-152x152.png",
-        "/icons/icon-192x192.png",
-        "/icons/icon-384x384.png",
-        "/icons/icon-512x512.png",
-        "/icons/icon-72x72.png",
-        "/icons/icon-96x96.png",
-        "/img/mascot.png",
-        "/img/mockup.png"
+        "/dev-lingo/icons/icon-128x128.png",
+        "/dev-lingo/icons/icon-144x144.png",
+        "/dev-lingo/icons/icon-152x152.png",
+        "/dev-lingo/icons/icon-192x192.png",
+        "/dev-lingo/icons/icon-384x384.png",
+        "/dev-lingo/icons/icon-512x512.png",
+        "/dev-lingo/icons/icon-72x72.png",
+        "/dev-lingo/icons/icon-96x96.png",
+        "/dev-lingo/img/mascot.png",
+        "/dev-lingo/img/mockup.png"
       ],
       "patterns": []
     }
   ],
   "dataGroups": [],
   "hashTable": {
-    "/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
-    "/icons/icon-128x128.png": "f912963bdc6d5a38d8f1dd0afbaab2ce8d657acb",
-    "/icons/icon-144x144.png": "b155fd5f2fd5d2ea7760721063003c4cd95fd783",
-    "/icons/icon-152x152.png": "eae6e0f0c8afb8aaae339e2a569b43e9238e5e6c",
-    "/icons/icon-192x192.png": "15c4180454633880d98674aa7394656196c91584",
-    "/icons/icon-384x384.png": "94a915751ef6c9282df9aea405ad679230631814",
-    "/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
-    "/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
-    "/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
-    "/img/mascot.png": "9bc45e7215125a2ca2fd553df72659c3faad83b0",
-    "/img/mockup.png": "37d6ceb1d2c47c0fd9eb51a553d69f5177562894",
-    "/index.html": "c0c032f27f966dab9111d30e5f3f6ae29b7e27ae",
-    "/main-SAF4WGGK.js": "9fcfee00b4694524e1b419b7327d1dbe6dc64d3e",
-    "/manifest.webmanifest": "5947c6c4744a380bfeef81f2e59ed2001d650b1b",
-    "/styles-FDERAL6D.css": "ad3a5c179608bb057e4ae78e843bb86b31d515fb"
+    "/dev-lingo/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/dev-lingo/icons/icon-128x128.png": "f912963bdc6d5a38d8f1dd0afbaab2ce8d657acb",
+    "/dev-lingo/icons/icon-144x144.png": "b155fd5f2fd5d2ea7760721063003c4cd95fd783",
+    "/dev-lingo/icons/icon-152x152.png": "eae6e0f0c8afb8aaae339e2a569b43e9238e5e6c",
+    "/dev-lingo/icons/icon-192x192.png": "15c4180454633880d98674aa7394656196c91584",
+    "/dev-lingo/icons/icon-384x384.png": "94a915751ef6c9282df9aea405ad679230631814",
+    "/dev-lingo/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
+    "/dev-lingo/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
+    "/dev-lingo/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
+    "/dev-lingo/img/mascot.png": "9bc45e7215125a2ca2fd553df72659c3faad83b0",
+    "/dev-lingo/img/mockup.png": "37d6ceb1d2c47c0fd9eb51a553d69f5177562894",
+    "/dev-lingo/index.html": "5e4ddbcd169e893ce2e05ef73d9777f6c5704caf",
+    "/dev-lingo/main-SAF4WGGK.js": "9fcfee00b4694524e1b419b7327d1dbe6dc64d3e",
+    "/dev-lingo/manifest.webmanifest": "b00d7fd6863e872e7389b471b547fad3680bc412",
+    "/dev-lingo/styles-FDERAL6D.css": "ad3a5c179608bb057e4ae78e843bb86b31d515fb"
   },
   "navigationUrls": [
     {
