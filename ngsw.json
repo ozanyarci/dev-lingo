@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1772798670805,
+  "timestamp": 1772800454425,
   "index": "/dev-lingo/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/dev-lingo/favicon.ico",
         "/dev-lingo/index.html",
-        "/dev-lingo/main-VGCJMJFH.js",
+        "/dev-lingo/main-VI5X3I4D.js",
         "/dev-lingo/manifest.webmanifest",
         "/dev-lingo/styles-FDERAL6D.css"
       ],
@@ -54,8 +54,8 @@
     "/dev-lingo/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
     "/dev-lingo/img/mascot.png": "9bc45e7215125a2ca2fd553df72659c3faad83b0",
     "/dev-lingo/img/mockup.png": "37d6ceb1d2c47c0fd9eb51a553d69f5177562894",
-    "/dev-lingo/index.html": "19886307b8fff9f4977b3fffb1b18626815105b1",
-    "/dev-lingo/main-VGCJMJFH.js": "86d31ffe898e6a57056b7eb6acd59473e05630ac",
+    "/dev-lingo/index.html": "b7b78a8bd4cbb58d808a145a5cd06a53fa8c2441",
+    "/dev-lingo/main-VI5X3I4D.js": "bccf7b08ade4d424eb1e810d2063de3b12b6c301",
     "/dev-lingo/manifest.webmanifest": "b00d7fd6863e872e7389b471b547fad3680bc412",
     "/dev-lingo/styles-FDERAL6D.css": "ad3a5c179608bb057e4ae78e843bb86b31d515fb"
   },
