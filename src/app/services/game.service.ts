@@ -205,25 +205,25 @@ export class GameService {
             let newCompletedForTypescript = s.completedLessonsForTypeScript;
 
             //remove 0 from completedLessonsForTypeScript
-            const index = newCompletedForTypescript.indexOf(0);
-                if (index !== -1) {
+            const index = newCompletedForTypescript?.indexOf(0);
+                if (index !== -1 && index != null) {
                 newCompletedForTypescript.splice(index, 1);
             }
 
             if (this.lessonService.currentParamater() === 'javascript') {
 
-                const alreadyCompleted = s.completedLessons.includes(lessonId);
+                const alreadyCompleted = s.completedLessons?.includes(lessonId);
 
                 if (!alreadyCompleted) {
-                    newCompleted = [...s.completedLessons, lessonId];
+                    newCompleted = [...(s.completedLessons ?? []), lessonId];
                 }
 
             } else {
 
-                const alreadyCompleted = s.completedLessonsForTypeScript.includes(lessonId);
+                const alreadyCompleted = s.completedLessonsForTypeScript?.includes(lessonId);
 
                 if (!alreadyCompleted) {
-                    newCompletedForTypescript = [...s.completedLessonsForTypeScript, lessonId];
+                    newCompletedForTypescript = [...(s.completedLessonsForTypeScript ?? []), lessonId];
                 }
             }
 
