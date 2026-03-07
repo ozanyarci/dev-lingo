@@ -65,6 +65,10 @@ export class LearnComponent implements AfterViewInit {
         { id: 19, title: 'JavaScript modules', description: 'JavaScript modules', color: '#f97116', lessons: 9 }
     ];
 
+    ngOnInit() {
+        this.lessonService.loadLessons('javascript');
+    }
+
     ngAfterViewInit() {
         // Small timeout to ensure the DOM is ready and styles are applied
         setTimeout(() => {

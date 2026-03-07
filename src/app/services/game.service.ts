@@ -1,4 +1,5 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
+import { Injectable, signal, computed, effect, inject } from '@angular/core';
+import { LessonService } from './lesson.service';
 
 export interface UserStats {
     streak: number;
@@ -9,6 +10,7 @@ export interface UserStats {
     xp: number;
     level: number;
     completedLessons: number[];
+    completedLessonsForTypeScript: number[];
 }
 
 @Injectable({
@@ -28,6 +30,8 @@ export class GameService {
 
     // Time remaining until the next heart in milliseconds
     readonly nextHeartIn = signal<number>(0);
+
+    lessonService = inject(LessonService);
 
     constructor() {
         // Automatically save to localStorage whenever stats change
@@ -71,7 +75,8 @@ export class GameService {
             lastHeartUpdate: Date.now(),
             xp: 0,
             level: 1,
-            completedLessons: []
+            completedLessons: [],
+            completedLessonsForTypeScript: []
         };
     }
 
@@ -174,15 +179,20 @@ export class GameService {
 
     completeLesson(lessonId: number) {
         this._stats.update(s => {
+
             const today = new Date().toISOString().split('T')[0];
             let newStreak = s.streak;
 
             if (s.lastLessonDate === null) {
                 newStreak = 1;
             } else if (s.lastLessonDate !== today) {
+
                 const last = new Date(s.lastLessonDate);
                 const now = new Date(today);
-                const diffDays = Math.floor((now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
+
+                const diffDays = Math.floor(
+                    (now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24)
+                );
 
                 if (diffDays === 1) {
                     newStreak = s.streak + 1;
@@ -191,15 +201,40 @@ export class GameService {
                 }
             }
 
-            const alreadyCompleted = s.completedLessons.includes(lessonId);
-            const newCompleted = alreadyCompleted ? s.completedLessons : [...s.completedLessons, lessonId];
+            let newCompleted = s.completedLessons;
+            let newCompletedForTypescript = s.completedLessonsForTypeScript;
+
+            //remove 0 from completedLessonsForTypeScript
+            const index = newCompletedForTypescript.indexOf(0);
+                if (index !== -1) {
+                newCompletedForTypescript.splice(index, 1);
+            }
+
+            if (this.lessonService.currentParamater() === 'javascript') {
+
+                const alreadyCompleted = s.completedLessons.includes(lessonId);
+
+                if (!alreadyCompleted) {
+                    newCompleted = [...s.completedLessons, lessonId];
+                }
+
+            } else {
+
+                const alreadyCompleted = s.completedLessonsForTypeScript.includes(lessonId);
+
+                if (!alreadyCompleted) {
+                    newCompletedForTypescript = [...s.completedLessonsForTypeScript, lessonId];
+                }
+            }
 
             return {
                 ...s,
                 streak: newStreak,
                 lastLessonDate: today,
-                completedLessons: newCompleted
+                completedLessons: newCompleted,
+                completedLessonsForTypeScript: newCompletedForTypescript
             };
+
         });
     }
 

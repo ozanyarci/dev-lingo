@@ -17,6 +17,7 @@ export class LessonComponent implements OnInit {
     private readonly lessonService = inject(LessonService);
 
     lessonId = signal<number>(0);
+    lessonIdForTypeScript = signal<number>(0);
     currentQuestionIndex = signal<number>(0);
     selectedOption = signal<string | null>(null);
     isAnswerChecked = signal<boolean>(false);
@@ -42,6 +43,7 @@ export class LessonComponent implements OnInit {
     constructor() {
         effect(() => {
             const id = this.lessonId();
+            const idlessonIdForTypeScript = this.lessonIdForTypeScript();
             if (id > 0 && this.lessonService.isLoaded()) {
                 const lesson = this.lessonService.getLesson(id);
                 if (lesson) {
@@ -51,12 +53,24 @@ export class LessonComponent implements OnInit {
                     this.router.navigate(['/learn']);
                 }
             }
+            if (idlessonIdForTypeScript > 0 && this.lessonService.isTypeScriptLessonLoaded()) {
+                const lesson = this.lessonService.getLessonForTypescript(idlessonIdForTypeScript);
+                if (lesson) {
+                    this.questions.set(lesson.questions);
+                    this.lessonTitle.set(lesson.title);
+                } else {
+                    this.router.navigate(['/learn/typescript']);
+                }
+            }
         });
     }
 
     ngOnInit() {
+
         const id = Number(this.route.snapshot.paramMap.get('id'));
         this.lessonId.set(id);
+        const typescriptid = Number(this.route.snapshot.paramMap.get('typescriptid'));
+        this.lessonIdForTypeScript.set(typescriptid);
         this.startTime = Date.now();
     }
 
@@ -67,7 +81,12 @@ export class LessonComponent implements OnInit {
 
     checkAnswer() {
         if (this.isAnswerChecked()) {
-            this.nextQuestion();
+            if(this.lessonService.currentParamater() == 'javascript'){
+                this.nextQuestion();
+            }
+            else{
+                this.nextQuestionForTypescript();
+            }
             return;
         }
 
@@ -110,9 +129,40 @@ export class LessonComponent implements OnInit {
         }
     }
 
+    nextQuestionForTypescript() {
+        if (this.currentQuestionIndex() < this.questions().length - 1) {
+            this.currentQuestionIndex.update(i => i + 1);
+            this.selectedOption.set(null);
+            this.isAnswerChecked.set(false);
+        } else {
+            // Lesson complete
+            const endTime = Date.now();
+            const diff = endTime - this.startTime;
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            this.timeSpent.set(`${minutes}:${seconds.toString().padStart(2, '0')}`);
+
+            this.game.addGems(50);
+            this.game.completeLesson(this.lessonIdForTypeScript());
+
+            // Calculate total progress
+            const totalLessons = this.lessonService.getAllLessonsForTypescript().length;
+            const completedCount = this.game.stats().completedLessonsForTypeScript.length;
+            this.totalCompletionPercentage.set(Math.round((completedCount / totalLessons) * 100));
+
+            this.isSummaryShown.set(true);
+        }
+    }
+
     exitLesson() {
         if (this.isSummaryShown() || confirm('Are you sure you want to quit? You will lose your progress.')) {
-            this.router.navigate(['/learn']);
+            if(this.lessonService.currentParamater() =="javascript"){
+                this.router.navigate(['/learn']);
+            }
+            else{
+                this.router.navigate(['/learn/typescript']);
+            }
+            
         }
     }
 

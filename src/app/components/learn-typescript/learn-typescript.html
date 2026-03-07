@@ -1,0 +1,99 @@
+<div class="learn-container">
+    <div class="units-column">
+        <div *ngFor="let unit of units; let i = index" class="unit-wrapper">
+            <div class="unit-header" [style.backgroundColor]="unit.color">
+                <div class="unit-info">
+                    <h2>Unit {{ unit.id }}</h2>
+                    <p>{{ unit.title }}</p>
+                </div>
+                <button class="guidebook-btn" (click)="openGuidebook(unit)">
+                    <span class="btn-icon">📚</span> Guidebook
+                </button>
+            </div>
+
+            <div class="lessons-path">
+                <div *ngFor="let lesson of getLessonsArray(unit.lessons); let j = index" class="path-item"
+                    [style.--offset]="(j % 2 === 0 ? '20px' : '-20px')">
+                    <a [routerLink]="(isLessonAccessible(unit.id, j) && game.stats().hearts > 0) ? ['/lesson/typescript', unit.id * 100 + (j + 1)] : null"
+                        (click)="handleLessonClick(unit.id, j, $event)" class="lesson-node"
+                        [id]="isCurrentLesson(unit.id, j) ? 'current-lesson-typescript' : null"
+                        [class.completed]="isLessonCompleted(unit.id, j)" [class.current]="isCurrentLesson(unit.id, j)"
+                        [class.locked]="!isLessonAccessible(unit.id, j) || (isCurrentLesson(unit.id, j) && game.stats().hearts === 0)"
+                        [style.borderColor]="isLessonCompleted(unit.id, j) ? unit.color : 'var(--border-color)'">
+                        <div class="node-inner"
+                            [style.backgroundColor]="isLessonCompleted(unit.id, j) ? unit.color : ''"
+                            [style.borderColor]="isLessonCompleted(unit.id, j) ? unit.color : ''">
+                            <span *ngIf="isLessonCompleted(unit.id, j)">✔️</span>
+                            <span *ngIf="isCurrentLesson(unit.id, j)" class="star">⭐</span>
+                            <span *ngIf="!isLessonAccessible(unit.id, j) && !isCurrentLesson(unit.id, j)"
+                                class="lock">🔒</span>
+                            <span *ngIf="isCurrentLesson(unit.id, j) && game.stats().hearts === 0"
+                                class="lock">❤️</span>
+                        </div>
+                        <div class="node-shadow" [style.backgroundColor]="unit.color"
+                            [style.opacity]="isLessonCompleted(unit.id, j) ? 0.4 : 0.2"></div>
+
+                        <div *ngIf="isCurrentLesson(unit.id, j)" class="lesson-popover">
+                            <span>{{ game.stats().hearts > 0 ? 'Start' : 'No Hearts' }}</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div *ngIf="!getLessonsArray(unit.lessons)?.length" class="empty-state">
+                    <p>Nothing</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hearts Modal -->
+    <div class="modal-overlay" *ngIf="showHeartsModal()" (click)="showHeartsModal.set(false)">
+        <div class="modal-content animate-fade-in" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <button class="close-btn" (click)="showHeartsModal.set(false)">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="heart-illustration">❤️</div>
+                <h2>You're out of hearts</h2>
+                <p>Wait for a heart to refill to continue learning.</p>
+
+                <div class="refill-timer-box" *ngIf="formattedHeartTimer()">
+                    <span class="timer-label">Next heart in</span>
+                    <span class="timer-value">{{ formattedHeartTimer() }}</span>
+                </div>
+
+                <div class="refill-timer-box" *ngIf="!formattedHeartTimer()">
+                    <span class="timer-label">Hearts are full!</span>
+                </div>
+
+                <button class="btn-primary full-width" (click)="showHeartsModal.set(false)">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guidebook Modal -->
+    <div class="modal-overlay" *ngIf="showGuidebookModal()" (click)="showGuidebookModal.set(false)">
+        <div class="modal-content guidebook-modal animate-fade-in" (click)="$event.stopPropagation()">
+            <div class="modal-header" [style.backgroundColor]="guidebookContent()?.color">
+                <button class="close-btn white" (click)="showGuidebookModal.set(false)">✕</button>
+                <div class="header-text">
+                    <span class="guide-label">Guidebook</span>
+                    <h2>{{ guidebookContent()?.unitTitle }}</h2>
+                </div>
+            </div>
+            <div class="modal-body scrollable">
+                <div *ngFor="let section of guidebookContent()?.sections" class="guide-section">
+                    <h3>{{ section.title }}</h3>
+                    <div *ngFor="let exp of section.explanations" class="guide-explanation">
+                        <span class="bullet">⭐</span>
+                        <p>{{ exp }}</p>
+                    </div>
+                </div>
+
+                <div *ngIf="!guidebookContent()?.sections?.length" class="empty-state">
+                    <p>No study notes available for this unit yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
