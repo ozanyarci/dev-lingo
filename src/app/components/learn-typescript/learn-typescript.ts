@@ -45,6 +45,7 @@ export class LearnTypescriptComponent implements AfterViewInit {
 
   units: Unit[] = [
     { id: 1, title: 'Introduction to TypeScript', description: 'Introduction to TypeScript', color: '#58cc02', lessons: 5 },
+    { id: 2, title: 'Everyday Types', description: 'Everyday Types', color: '#69cf02', lessons: 7 },
 
   ];
 
