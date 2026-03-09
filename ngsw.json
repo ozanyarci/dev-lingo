@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1772907473425,
+  "timestamp": 1773072328222,
   "index": "/dev-lingo/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/dev-lingo/favicon.ico",
         "/dev-lingo/index.html",
-        "/dev-lingo/main-A7JHWJ4K.js",
+        "/dev-lingo/main-HUVHTGZC.js",
         "/dev-lingo/manifest.webmanifest",
         "/dev-lingo/styles-E3U7T6KK.css"
       ],
@@ -54,8 +54,8 @@
     "/dev-lingo/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
     "/dev-lingo/img/koala.jpg": "addab42c856817caeb6608a29a7cfbb47417d82f",
     "/dev-lingo/img/mockup.png": "37d6ceb1d2c47c0fd9eb51a553d69f5177562894",
-    "/dev-lingo/index.html": "99707b1b12d4439a0e4de6f3e545b9f91b74704f",
-    "/dev-lingo/main-A7JHWJ4K.js": "c673053253444b34b992c50ac8845eaafdb81b94",
+    "/dev-lingo/index.html": "5b4d6b65b069ac1cc6208ba447aec7fe485e4a3c",
+    "/dev-lingo/main-HUVHTGZC.js": "5246ce0b97cf54ca27e5e50ce0c74b4b2eabc0c3",
     "/dev-lingo/manifest.webmanifest": "b00d7fd6863e872e7389b471b547fad3680bc412",
     "/dev-lingo/styles-E3U7T6KK.css": "8401ebec7d4846e1edb26cbd27c511964212f977"
   },
