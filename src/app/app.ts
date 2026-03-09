@@ -3,7 +3,7 @@ import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ThemeService } from './services/theme.service';
-
+import { SwUpdate } from '@angular/service-worker';
 declare const gtag: Function;
 
 @Component({
@@ -17,7 +17,10 @@ export class App {
   protected readonly title = signal('dev-lingo');
   private readonly router = inject(Router);
 
-  constructor() {
+  constructor(private swUpdate: SwUpdate) {
+    this.swUpdate.versionUpdates.subscribe(() => {
+      window.location.reload();
+    });
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
