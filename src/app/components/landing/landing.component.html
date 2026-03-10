@@ -35,4 +35,30 @@
             <p>Learn anytime, anywhere with lessons that take only 5 minutes.</p>
         </div>
     </section>
+
+    <section class="stats-summary">
+        <h2>Your learning summary</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="label">Time spent</span>
+                <span class="value">{{ getFormattedTotalTime() }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">JS lessons completed</span>
+                <span class="value">{{ game.totalJavascriptLessonsCompleted() }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">TS lessons completed</span>
+                <span class="value">{{ game.totalTypescriptLessonsCompleted() }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Hearts used</span>
+                <span class="value">{{ game.totalHeartsUsed() }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">XP gained</span>
+                <span class="value">{{ game.totalXpGained() }}</span>
+            </div>
+        </div>
+    </section>
 </div>

@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, effect, inject } from '@angular/core';
 import { LessonService } from './lesson.service';
+import { SupabaseService } from './supabase.service';
 
 export interface UserStats {
     streak: number;
@@ -7,10 +8,13 @@ export interface UserStats {
     gems: number;
     hearts: number;
     lastHeartUpdate: number;
-    xp: number;
+    xp: number;           // XP towards current level
     level: number;
     completedLessons: number[];
     completedLessonsForTypeScript: number[];
+    totalTimeMs: number;
+    heartsUsed: number;
+    totalXp: number;      // cumulative XP across all levels
 }
 
 @Injectable({
@@ -28,20 +32,66 @@ export class GameService {
     readonly pointsToNextLevel = computed(() => this.stats().level * 1000);
     readonly progressToNextLevel = computed(() => (this.stats().xp / this.pointsToNextLevel()) * 100);
 
+    readonly totalJavascriptLessonsCompleted = computed(
+        () => this.stats().completedLessons.length
+    );
+    readonly totalTypescriptLessonsCompleted = computed(
+        () => this.stats().completedLessonsForTypeScript.length
+    );
+    readonly totalHeartsUsed = computed(() => this.stats().heartsUsed ?? 0);
+    readonly totalTimeMs = computed(() => this.stats().totalTimeMs ?? 0);
+    // Cumulative XP across all levels:
+    // level 1: 0–999, level 2: 1000–2999, level 3: 3000–5999, etc.
+    readonly totalXpGained = computed(() => {
+        const { level, xp } = this.stats();
+        const completedLevels = Math.max(0, level - 1);
+        const perLevel = 1000;
+        const completedXp = perLevel * (completedLevels * (completedLevels + 1)) / 2;
+        return completedXp + xp;
+    });
+
     // Time remaining until the next heart in milliseconds
     readonly nextHeartIn = signal<number>(0);
 
     lessonService = inject(LessonService);
+    private readonly supabase = inject(SupabaseService);
+
+    private lastActiveTimestamp = Date.now();
 
     constructor() {
         // Automatically save to localStorage whenever stats change
         effect(() => {
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.stats()));
+            const snapshot = this.stats();
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(snapshot));
+
+            // If logged in, also sync to Supabase
+            const user = this.supabase.user();
+            if (user) {
+                this.syncToSupabase(snapshot);
+            }
         });
 
-        // Periodic check for hearts and streak
-        this.checkStatus();
-        setInterval(() => this.checkStatus(), 1000);
+        // When a user logs in, try to load stats from Supabase once
+        effect(() => {
+            const user = this.supabase.user();
+            if (!user) return;
+            this.loadFromSupabase();
+        });
+
+        // Initial status check (no time accumulation yet)
+        this.checkStatus(false);
+        // Periodic check for hearts, streak, and time spent
+        setInterval(() => this.checkStatus(true), 1000);
+    }
+
+    private normalizeStats(raw: UserStats): UserStats {
+        const stats = { ...raw };
+        if (!stats.lastHeartUpdate) stats.lastHeartUpdate = Date.now();
+        if (stats.lastLessonDate === undefined) stats.lastLessonDate = null;
+        if (stats.totalTimeMs === undefined) stats.totalTimeMs = 0;
+        if (stats.heartsUsed === undefined) stats.heartsUsed = 0;
+        if ((stats as any).totalXp === undefined) (stats as any).totalXp = stats.xp ?? 0;
+        return this.checkStreakReset(stats);
     }
 
     private loadStats(): UserStats {
@@ -51,9 +101,6 @@ export class GameService {
         if (saved) {
             try {
                 stats = JSON.parse(saved);
-                // Ensure lastHeartUpdate exists for legacy data
-                if (!stats.lastHeartUpdate) stats.lastHeartUpdate = Date.now();
-                if (stats.lastLessonDate === undefined) stats.lastLessonDate = null;
             } catch (e) {
                 console.error('Failed to load stats', e);
                 stats = this.getDefaultStats();
@@ -62,8 +109,7 @@ export class GameService {
             stats = this.getDefaultStats();
         }
 
-        // Check for streak reset
-        return this.checkStreakReset(stats);
+        return this.normalizeStats(stats);
     }
 
     private getDefaultStats(): UserStats {
@@ -76,7 +122,10 @@ export class GameService {
             xp: 0,
             level: 1,
             completedLessons: [],
-            completedLessonsForTypeScript: []
+            completedLessonsForTypeScript: [],
+            totalTimeMs: 0,
+            heartsUsed: 0,
+            totalXp: 0
         };
     }
 
@@ -99,8 +148,66 @@ export class GameService {
         return stats;
     }
 
-    private checkStatus() {
+    private async loadFromSupabase() {
+        const client = this.supabase.getClient();
+        const user = this.supabase.user();
+        if (!client || !user) return;
+
+        const { data, error } = await client
+            .from('user_stats')
+            .select('stats')
+            .eq('user_id', user.id)
+            .single();
+
+        if (error) {
+            // PGRST116 = row not found; that's fine on first login
+            if ((error as any).code !== 'PGRST116') {
+                console.error('Failed to load stats from Supabase', error);
+            }
+            return;
+        }
+
+        if (data?.stats) {
+            const normalized = this.normalizeStats(data.stats as UserStats);
+            this._stats.set(normalized);
+        }
+    }
+
+    private async syncToSupabase(statsOverride?: UserStats) {
+        const client = this.supabase.getClient();
+        const user = this.supabase.user();
+        if (!client || !user) return;
+
+        const stats = statsOverride ?? this.stats();
+        const { error } = await client
+            .from('user_stats')
+            .upsert(
+                {
+                    user_id: user.id,
+                    stats
+                },
+                { onConflict: 'user_id' }
+            );
+        if (error) {
+            console.error('Failed to sync stats to Supabase', error);
+        }
+    }
+
+    private checkStatus(trackTime: boolean) {
         const now = Date.now();
+
+        if (trackTime) {
+            const delta = now - this.lastActiveTimestamp;
+            if (delta > 0 && delta < 5 * 60 * 60 * 1000) { // cap to avoid huge jumps
+                this._stats.update(s => ({
+                    ...s,
+                    totalTimeMs: (s.totalTimeMs ?? 0) + delta
+                }));
+            }
+        }
+
+        this.lastActiveTimestamp = now;
+
         const s = this.stats();
 
         // 1. Heart Refill
@@ -138,7 +245,11 @@ export class GameService {
     }
 
     addXp(amount: number) {
-        this._stats.update(s => ({ ...s, xp: s.xp + amount }));
+        this._stats.update(s => ({
+            ...s,
+            xp: s.xp + amount,
+            totalXp: (s.totalXp ?? 0) + amount
+        }));
         this.checkLevelUp();
     }
 
@@ -153,7 +264,8 @@ export class GameService {
             return {
                 ...curr,
                 hearts: newHearts,
-                lastHeartUpdate: newLastUpdate
+                lastHeartUpdate: newLastUpdate,
+                heartsUsed: (curr.heartsUsed ?? 0) + 1
             };
         });
     }

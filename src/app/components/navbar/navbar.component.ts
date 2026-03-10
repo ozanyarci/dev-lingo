@@ -5,6 +5,7 @@ import { filter, map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { GameService } from '../../services/game.service';
 import { ThemeService } from '../../services/theme.service';
+import { SupabaseService } from '../../services/supabase.service';
 
 @Component({
     selector: 'app-navbar',
@@ -15,6 +16,7 @@ import { ThemeService } from '../../services/theme.service';
 export class NavbarComponent {
     protected readonly game = inject(GameService);
     protected readonly theme = inject(ThemeService);
+    protected readonly supabase = inject(SupabaseService);
     private readonly router = inject(Router);
 
     private readonly currentUrl = toSignal(
@@ -28,6 +30,8 @@ export class NavbarComponent {
     isLessonMode = computed(() => this.currentUrl().startsWith('/lesson'));
 
     showRefillModal = signal(false);
+    emailForLogin = signal('');
+    authMessage = signal<string | null>(null);
 
     formattedHeartTimer = computed(() => {
         // ... previous implementation ...
@@ -38,6 +42,27 @@ export class NavbarComponent {
         const seconds = totalSeconds % 60;
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     });
+
+    async requestMagicLink() {
+        const email = this.emailForLogin().trim();
+        if (!email) {
+            this.authMessage.set('Please enter an email.');
+            return;
+        }
+        try {
+            await this.supabase.signInWithEmail(email);
+            this.authMessage.set('Check your email for a login link.');
+        } catch (err) {
+            console.error(err);
+            const msg = (err as { message?: string }).message ?? 'Could not send login link. Try again.';
+            this.authMessage.set(msg);
+        }
+    }
+
+    async logout() {
+        await this.supabase.signOut();
+        this.authMessage.set('Signed out.');
+    }
 
     handleHeartRefill() {
         if (this.game.stats().hearts === 0) {

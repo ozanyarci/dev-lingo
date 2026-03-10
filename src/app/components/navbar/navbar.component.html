@@ -33,6 +33,24 @@
         </div>
 
         <div class="user-actions">
+            <div class="auth-box">
+                <ng-container *ngIf="!supabase.isLoggedIn(); else loggedIn">
+                    <input
+                        type="email"
+                        class="auth-input"
+                        placeholder="Email for backup"
+                        [value]="emailForLogin()"
+                        (input)="emailForLogin.set($event.target['value'])" />
+                    <button class="auth-button" (click)="requestMagicLink()">Save progress</button>
+                </ng-container>
+                <ng-template #loggedIn>
+                    <span class="auth-status">Progress synced</span>
+                    <button class="auth-button secondary" (click)="logout()">Sign out</button>
+                </ng-template>
+                <div class="auth-message" *ngIf="authMessage()">
+                    {{ authMessage() }}
+                </div>
+            </div>
             <button class="theme-toggle" (click)="theme.toggleTheme()"
                 [title]="theme.isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
                 {{ theme.isDarkMode() ? '☀️' : '🌙' }}
