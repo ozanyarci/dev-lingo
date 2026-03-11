@@ -35,17 +35,16 @@
         <div class="user-actions">
             <div class="auth-box">
                 <ng-container *ngIf="!supabase.isLoggedIn(); else loggedIn">
-                    <input
-                        type="email"
-                        class="auth-input"
-                        placeholder="Email for backup"
-                        [value]="emailForLogin()"
-                        (input)="emailForLogin.set($event.target['value'])" />
-                    <button class="auth-button" (click)="requestMagicLink()">Save progress</button>
+                    <input type="email" class="auth-input" placeholder="Email to sync progress"
+                        [value]="emailForLogin()" (input)="emailForLogin.set($event.target['value'])" />
+                    <button class="auth-button" (click)="requestMagicLink()">Sync progress</button>
                 </ng-container>
                 <ng-template #loggedIn>
                     <span class="auth-status">Progress synced</span>
-                    <button class="auth-button secondary" (click)="logout()">Sign out</button>
+                    <div class="auth-actions">
+                        <button class="auth-button secondary" (click)="loadFromCloud()">Load from cloud</button>
+                        <button class="auth-button secondary" (click)="logout()">Sign out</button>
+                    </div>
                 </ng-template>
                 <div class="auth-message" *ngIf="authMessage()">
                     {{ authMessage() }}

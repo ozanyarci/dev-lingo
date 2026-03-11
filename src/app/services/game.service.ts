@@ -57,6 +57,7 @@ export class GameService {
     private readonly supabase = inject(SupabaseService);
 
     private lastActiveTimestamp = Date.now();
+    private readonly isInitialCloudLoadComplete = signal(false);
 
     constructor() {
         // Automatically save to localStorage whenever stats change
@@ -65,8 +66,9 @@ export class GameService {
             localStorage.setItem(this.STORAGE_KEY, JSON.stringify(snapshot));
 
             // If logged in, also sync to Supabase
+            // ONLY sync if we have successfully loaded (or tried to load) the cloud data
             const user = this.supabase.user();
-            if (user) {
+            if (user && this.isInitialCloudLoadComplete()) {
                 this.syncToSupabase(snapshot);
             }
         });
@@ -74,7 +76,10 @@ export class GameService {
         // When a user logs in, try to load stats from Supabase once
         effect(() => {
             const user = this.supabase.user();
-            if (!user) return;
+            if (!user) {
+                this.isInitialCloudLoadComplete.set(false);
+                return;
+            }
             this.loadFromSupabase();
         });
 
@@ -151,26 +156,38 @@ export class GameService {
     private async loadFromSupabase() {
         const client = this.supabase.getClient();
         const user = this.supabase.user();
-        if (!client || !user) return;
-
-        const { data, error } = await client
-            .from('user_stats')
-            .select('stats')
-            .eq('user_id', user.id)
-            .single();
-
-        if (error) {
-            // PGRST116 = row not found; that's fine on first login
-            if ((error as any).code !== 'PGRST116') {
-                console.error('Failed to load stats from Supabase', error);
-            }
+        if (!client || !user) {
+            this.isInitialCloudLoadComplete.set(true);
             return;
         }
 
-        if (data?.stats) {
-            const normalized = this.normalizeStats(data.stats as UserStats);
-            this._stats.set(normalized);
+        try {
+            const { data, error } = await client
+                .from('user_stats')
+                .select('stats')
+                .eq('user_id', user.id)
+                .single();
+
+            if (error) {
+                // PGRST116 = row not found; that's fine on first login
+                if ((error as any).code !== 'PGRST116') {
+                    console.error('Failed to load stats from Supabase', error);
+                }
+                return;
+            }
+
+            if (data?.stats) {
+                const normalized = this.normalizeStats(data.stats as UserStats);
+                this._stats.set(normalized);
+            }
+        } finally {
+            this.isInitialCloudLoadComplete.set(true);
         }
+    }
+
+    // Public helper to refresh from cloud on demand
+    async refreshFromCloud(): Promise<void> {
+        await this.loadFromSupabase();
     }
 
     private async syncToSupabase(statsOverride?: UserStats) {
@@ -318,7 +335,7 @@ export class GameService {
 
             //remove 0 from completedLessonsForTypeScript
             const index = newCompletedForTypescript?.indexOf(0);
-                if (index !== -1 && index != null) {
+            if (index !== -1 && index != null) {
                 newCompletedForTypescript.splice(index, 1);
             }
 

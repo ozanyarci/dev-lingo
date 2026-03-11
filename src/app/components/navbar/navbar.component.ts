@@ -43,6 +43,11 @@ export class NavbarComponent {
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     });
 
+    async loadFromCloud() {
+        await this.game.refreshFromCloud();
+        this.authMessage.set('Progress loaded from cloud.');
+    }
+
     async requestMagicLink() {
         const email = this.emailForLogin().trim();
         if (!email) {

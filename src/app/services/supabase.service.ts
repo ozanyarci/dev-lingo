@@ -43,10 +43,11 @@ export class SupabaseService {
 
     async signInWithEmail(email: string) {
         if (!this.client) throw new Error('Supabase not configured (no client). Check SUPABASE_URL / ANON key.');
+        const redirectTo = window.location.origin + window.location.pathname;
         return this.client.auth.signInWithOtp({
             email,
             options: {
-                emailRedirectTo: window.location.origin
+                emailRedirectTo: redirectTo
             }
         });
     }
