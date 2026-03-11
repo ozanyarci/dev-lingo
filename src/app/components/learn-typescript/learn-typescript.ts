@@ -44,15 +44,17 @@ export class LearnTypescriptComponent implements AfterViewInit {
   });
 
   units: Unit[] = [
-    { id: 1, title: 'Introduction to TypeScript', description: 'Introduction to TypeScript', color: '#58cc02', lessons: 5 },
-    { id: 2, title: 'Everyday Types', description: 'Everyday Types', color: '#69cf02', lessons: 7 },
+    { id: 1, title: 'Introduction to TypeScript', description: 'Introduction to TypeScript', color: '#c8a545ff', lessons: 5 },
+    { id: 2, title: 'Everyday Types', description: 'Everyday Types', color: '#a82699ff', lessons: 7 },
     { id: 3, title: 'Narrowing', description: 'Narrowing', color: '#69cf02', lessons: 7 },
-
+    { id: 4, title: 'More on Functions', description: 'More on Functions', color: '#9cc079ff', lessons: 9 },
+    { id: 5, title: 'Object Types', description: 'Object Types', color: '#2b4cb9ff', lessons: 9 },
+    { id: 6, title: 'Generics', description: 'Generics', color: '#c95dc7ff', lessons: 7 },
   ];
 
   ngOnInit() {
-  this.lessonService.loadLessons('typescript');
-}
+    this.lessonService.loadLessons('typescript');
+  }
 
   ngAfterViewInit() {
     // Small timeout to ensure the DOM is ready and styles are applied
