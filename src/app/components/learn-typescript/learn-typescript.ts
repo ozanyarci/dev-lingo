@@ -50,6 +50,15 @@ export class LearnTypescriptComponent implements AfterViewInit {
     { id: 4, title: 'More on Functions', description: 'More on Functions', color: '#9cc079ff', lessons: 9 },
     { id: 5, title: 'Object Types', description: 'Object Types', color: '#2b4cb9ff', lessons: 9 },
     { id: 6, title: 'Generics', description: 'Generics', color: '#c95dc7ff', lessons: 7 },
+    { id: 7, title: 'Keyof Type Operator', description: 'Keyof Type Operato', color: '#5f9327ff', lessons: 1 },
+    { id: 8, title: 'Typeof Type Operator', description: 'Typeof Type Operator', color: '#96a8d0ff', lessons: 1 },
+    { id: 9, title: 'Indexed Access Types', description: 'Indexed Access Types', color: '#881a48ff', lessons: 1 },
+    { id: 10, title: 'Conditional Types', description: 'Conditional Types', color: '#8075bdff', lessons: 3 },
+    { id: 11, title: 'Mapped Types', description: 'Mapped Types', color: '#b39746ff', lessons: 5 },
+    { id: 12, title: 'Template Literal Types', description: 'Template Literal Types', color: '#8d273dff', lessons: 5 },
+    { id: 13, title: 'Classes in TypeScript', description: 'Classes in TypeScript', color: '#4024b1ff', lessons: 9 },
+    { id: 14, title: 'Modules', description: 'Modules', color: '#2d9b82ff', lessons: 5 },
+    
   ];
 
   ngOnInit() {
