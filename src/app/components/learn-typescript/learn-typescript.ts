@@ -58,6 +58,9 @@ export class LearnTypescriptComponent implements AfterViewInit {
     { id: 12, title: 'Template Literal Types', description: 'Template Literal Types', color: '#8d273dff', lessons: 5 },
     { id: 13, title: 'Classes in TypeScript', description: 'Classes in TypeScript', color: '#4024b1ff', lessons: 9 },
     { id: 14, title: 'Modules', description: 'Modules', color: '#2d9b82ff', lessons: 5 },
+    { id: 15, title: 'Namespaces', description: 'Namespaces', color: '#a2ce35ff', lessons: 3 },
+    { id: 16, title: 'Utility Types', description: 'Utility Types', color: '#1b24d0ff', lessons: 7 },
+    { id: 17, title: 'Declaration Files (.d.ts)', description: 'Declaration Files (.d.ts)', color: '#bccc75ff', lessons: 11 },
     
   ];
 
