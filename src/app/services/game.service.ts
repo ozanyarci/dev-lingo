@@ -87,6 +87,14 @@ export class GameService {
         this.checkStatus(false);
         // Periodic check for hearts, streak, and time spent
         setInterval(() => this.checkStatus(true), 1000);
+
+        if (typeof document !== 'undefined') {
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    this.lastActiveTimestamp = Date.now();
+                }
+            });
+        }
     }
 
     private normalizeStats(raw: UserStats): UserStats {
@@ -212,8 +220,9 @@ export class GameService {
 
     private checkStatus(trackTime: boolean) {
         const now = Date.now();
+        const isVisible = typeof document !== 'undefined' ? !document.hidden : true;
 
-        if (trackTime) {
+        if (trackTime && isVisible) {
             const delta = now - this.lastActiveTimestamp;
             if (delta > 0 && delta < 5 * 60 * 60 * 1000) { // cap to avoid huge jumps
                 this._stats.update(s => ({

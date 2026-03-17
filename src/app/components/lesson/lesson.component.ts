@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, effect, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../../services/game.service';
@@ -28,7 +28,9 @@ export class LessonComponent implements OnInit {
     timeSpent = signal<string>('');
     totalCompletionPercentage = signal<number>(0);
     xpEarned = signal<number>(0);
-    private startTime: number = 0;
+    private totalActiveTime: number = 0;
+    private lastActiveStartTime: number = 0;
+    private isActive: boolean = true;
     outOfHearts = computed(() => this.game.stats().hearts === 0);
 
     formattedHeartTimer = computed(() => {
@@ -71,7 +73,24 @@ export class LessonComponent implements OnInit {
         this.lessonId.set(id);
         const typescriptid = Number(this.route.snapshot.paramMap.get('typescriptid'));
         this.lessonIdForTypeScript.set(typescriptid);
-        this.startTime = Date.now();
+        this.lastActiveStartTime = Date.now();
+        this.totalActiveTime = 0;
+        this.isActive = true;
+    }
+
+    @HostListener('document:visibilitychange')
+    onVisibilityChange() {
+        if (document.hidden) {
+            if (this.isActive) {
+                this.totalActiveTime += Date.now() - this.lastActiveStartTime;
+                this.isActive = false;
+            }
+        } else {
+            if (!this.isActive) {
+                this.lastActiveStartTime = Date.now();
+                this.isActive = true;
+            }
+        }
     }
 
     selectOption(option: string) {
@@ -111,10 +130,9 @@ export class LessonComponent implements OnInit {
             this.isAnswerChecked.set(false);
         } else {
             // Lesson complete
-            const endTime = Date.now();
-            const diff = endTime - this.startTime;
-            const minutes = Math.floor(diff / 60000);
-            const seconds = Math.floor((diff % 60000) / 1000);
+            const finalTime = this.totalActiveTime + (this.isActive ? (Date.now() - this.lastActiveStartTime) : 0);
+            const minutes = Math.floor(finalTime / 60000);
+            const seconds = Math.floor((finalTime % 60000) / 1000);
             this.timeSpent.set(`${minutes}:${seconds.toString().padStart(2, '0')}`);
 
             this.game.addGems(50);
@@ -136,10 +154,9 @@ export class LessonComponent implements OnInit {
             this.isAnswerChecked.set(false);
         } else {
             // Lesson complete
-            const endTime = Date.now();
-            const diff = endTime - this.startTime;
-            const minutes = Math.floor(diff / 60000);
-            const seconds = Math.floor((diff % 60000) / 1000);
+            const finalTime = this.totalActiveTime + (this.isActive ? (Date.now() - this.lastActiveStartTime) : 0);
+            const minutes = Math.floor(finalTime / 60000);
+            const seconds = Math.floor((finalTime % 60000) / 1000);
             this.timeSpent.set(`${minutes}:${seconds.toString().padStart(2, '0')}`);
 
             this.game.addGems(50);
